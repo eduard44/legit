@@ -2,11 +2,15 @@
 
 A simple input validation JavaScript library
 
+## Requirements:
+
+- (Ensure.js)[https://github.com/eduard44/ensure]
+
 ---
 
 ## Usage example (on the browser):
 
-```
+```js
 var userValidator = new legit.Validator();
 
 userValidator.addRule('first_name', new legit.MinMaxLengthRule(1, 20));
