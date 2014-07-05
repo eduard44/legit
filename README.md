@@ -4,7 +4,7 @@ A simple input validation JavaScript library
 
 ## Requirements:
 
-- (Ensure.js)[https://github.com/eduard44/ensure]
+- Ensure.js (https://github.com/eduard44/ensure)
 
 ---
 
