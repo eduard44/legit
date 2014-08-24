@@ -1,6 +1,8 @@
 "use strict";
 
-var root = this;
+var root = this,
+    legit,
+    ensure;
 
 (function () {
     /**
@@ -10,7 +12,7 @@ var root = this;
      *
      * @author Eduardo Trujillo <ed@chromabits.com>
      */
-    var legit = {};
+    legit = {};
 
     // Constructor definitions
 
@@ -324,6 +326,12 @@ var root = this;
     // Check if it is running in Node.js
     if (typeof module !== 'undefined' && module.exports) {
         module.exports = legit;
+
+        // Load ensure from module
+        ensure = require('ensure.js');
+    } else {
+        // Load ensure from global scope
+        ensure = root.ensure;
     }
 
     root.legit = legit;

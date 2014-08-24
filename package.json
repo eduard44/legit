@@ -1,8 +1,8 @@
 {
-  "name": "legit",
-  "version": "0.1.0",
+  "name": "legit.js",
+  "version": "0.1.1",
   "description": "Simple JS validation library",
-  "main": "legit.js",
+  "main": "dist/legit.js",
   "dependencies": {
     "grunt": "^0.4.5"
   },

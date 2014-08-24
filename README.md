@@ -6,7 +6,33 @@ A simple input validation JavaScript library
 
 - Ensure.js (https://github.com/eduard44/ensure)
 
----
+## On the browser:
+
+On the browser, legit is available as a global object:
+
+1- Install using Bower:
+
+```
+bower install legit
+```
+
+2- Make sure ensure.js is also included in your project (Bower automatically downloads it as a dependency):
+
+```html
+<script src="bower_components/ensure.js/ensure.js"></script>
+```
+
+3- Include the JS file on your project:
+
+```html
+<script src="bower_components/legit/dist/legit.js"></script>
+```
+
+4- Use it!
+
+## On node.js:
+
+- On node.js, legit is available as a module.
 
 ## Usage example (on the browser):
 

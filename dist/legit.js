@@ -1,6 +1,8 @@
 "use strict";
 
-var root = this;
+var root = this,
+    legit,
+    ensure;
 
 (function () {
     /**
@@ -10,7 +12,7 @@ var root = this;
      *
      * @author Eduardo Trujillo <ed@chromabits.com>
      */
-    var legit = {};
+    legit = {};
 
     // Constructor definitions
 
@@ -324,7 +326,55 @@ var root = this;
     // Check if it is running in Node.js
     if (typeof module !== 'undefined' && module.exports) {
         module.exports = legit;
+
+        // Load ensure from module
+        ensure = require('ensure.js');
+    } else {
+        // Load ensure from global scope
+        ensure = root.ensure;
     }
 
     root.legit = legit;
 }());
+(function () {
+    "use strict";
+
+    var TypeRule;
+
+    /**
+     * Rule for checking if the type of a field matches
+     *
+     * @param type
+     * @constructor
+     */
+    TypeRule = function (type) {
+        // Call parent constructor
+        legit.ValidationRule.call(this, arguments);
+
+        this.typeCheck = type;
+    };
+
+    TypeRule.prototype = new legit.ValidationRule();
+
+    /**
+     * Execute rule
+     *
+     * @param value
+     * @returns {*}
+     */
+    TypeRule.prototype.execute = function (value) {
+        return ensure(value, this.typeCheck, true);
+    };
+
+    /**
+     * Get error message
+     *
+     * @param field
+     * @returns {string}
+     */
+    TypeRule.prototype.getMessage = function (field) {
+        return field + ' should be of type ' + this.typeCheck.name;
+    };
+
+    legit.TypeRule = TypeRule;
+})();
