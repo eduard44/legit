@@ -32,7 +32,21 @@ bower install legit
 
 ## On node.js:
 
-- On node.js, legit is available as a module.
+On node.js, legit is available as a module:
+
+1- Install using npm:
+
+```
+npm install legit.js
+```
+
+2.- Include the library in your project:
+
+```js
+var legit = require('legit.js');
+```
+
+3.- Use it!
 
 ## Usage example (on the browser):
 
@@ -76,9 +90,46 @@ try {
 
 ## Included rules:
 
-Legit.js comes with some built-in rules, but you can expand it with more by extending the `ValidationRule` object:
+Legit.js comes with some built-in rules:
 
-- MinMaxLengthRule
-- MinMaxRule
-- InArrayRule
-- RequiredRule
+- MinMaxLengthRule(min, max)
+- MinMaxRule(min, max)
+- InArrayRule(allowedElements)
+- RequiredRule()
+- EqualsFieldRule(fieldName)
+- TypeRule(ensureType)
+
+## Extending:
+
+You can extend the default rule set by creating objects that have `ValidationRule` as their prototype:
+
+```js
+var HelloRule = function (checkWorld) {
+    // Call parent constructor
+    legit.ValidationRule.call(this, arguments)
+
+    // Save parameters
+    this.checkWorld = checkWorld;
+}
+
+HelloRule.prototype = new legit.ValidationRule();
+
+// The execute method performs the validation check.
+// It is expected that it returns true if the field is valid. False, otherwise.
+HelloRule.prototype.execute = function (inputValue, fields) {
+    if (this.checkWorld) {
+        return inputValue === 'hello world';
+    }
+
+    return inputValue === 'hello';
+};
+
+// (Optional) Get a custom error message for this rule
+HelloRule.prototype.getMessage = function (fieldName) {
+    if (this.checkWorld) {
+        return fieldName + ' should be equal to "hello world"';
+    }
+
+    return fieldName + ' should be equal to "hello"';
+};
+```
