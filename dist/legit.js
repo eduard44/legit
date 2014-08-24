@@ -96,6 +96,16 @@ var root = this;
      */
     function RequiredRule() {}
 
+    /**
+     * Rule for making sure that a field matches another field
+     *
+     * @param fieldName
+     * @constructor
+     */
+    function EqualsFieldRule(fieldName) {
+        this.fieldName = fieldName;
+    }
+
     // Library core
 
     /**
@@ -136,7 +146,7 @@ var root = this;
             if (input.hasOwnProperty(property) && this.rules[property] !== undefined) {
                 this.rules[property].forEach(function (ruleInstance) {
                     // Check if rule passes
-                    if (!ruleInstance.rule.execute(input[property])) {
+                    if (!ruleInstance.rule.execute(input[property], input)) {
                         // If it fails, add it to the exception
                         validationError.addFailedRule(property, input[property], ruleInstance.rule, ruleInstance.customMessage);
                         errorCount += 1;
@@ -158,7 +168,7 @@ var root = this;
      * @param value
      * @returns {boolean}
      */
-    ValidationRule.prototype.execute = function (value) {
+    ValidationRule.prototype.execute = function (value, inputArray) {
         return true;
     };
 
@@ -283,6 +293,22 @@ var root = this;
         return value !== undefined;
     };
 
+    EqualsFieldRule.prototype = new ValidationRule();
+
+    EqualsFieldRule.prototype.getMessage = function (field) {
+        return field + ' must match ' + this.fieldName;
+    };
+
+    EqualsFieldRule.prototype.execute = function (value, input) {
+        if (input.hasOwnProperty(this.fieldName)) {
+            if (input[this.fieldName] === value) {
+                return true;
+            }
+        }
+
+        return false;
+    };
+
     // Export library
 
     legit.Validator = Validator;
@@ -293,6 +319,7 @@ var root = this;
     legit.MinMaxLengthRule = MinMaxLengthRule;
     legit.InArrayRule = InArrayRule;
     legit.RequiredRule = RequiredRule;
+    legit.EqualsFieldRule = EqualsFieldRule;
 
     // Check if it is running in Node.js
     if (typeof module !== 'undefined' && module.exports) {

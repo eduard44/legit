@@ -27,9 +27,9 @@ try {
 } catch (error) {
     if (error instanceof legit.ValidationError) {
         console.log(error.getMessages());
+    } else {
+        console.log('We got some other kind of error :(');
     }
-
-    console.log('We got some other kind of error :(');
 }
 
 // This should fail:
@@ -42,9 +42,9 @@ try {
 } catch (error) {
     if (error instanceof legit.ValidationError) {
         console.log(error.getMessages());
+    } else {
+        console.log('We got some other kind of error :(');
     }
-
-    console.log('We got some other kind of error :(');
 }
 ```
 

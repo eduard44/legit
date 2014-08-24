@@ -1,0 +1,24 @@
+{
+  "name": "legit",
+  "main": "dist/legit.js",
+  "version": "0.1.0",
+  "homepage": "https://github.com/eduard44/legit",
+  "authors": [
+    "Eduardo Trujillo <ed@chromabits.com>"
+  ],
+  "description": "Extensible validation library",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "validation"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
