@@ -1,3 +1,5 @@
+![Logo](http://assets.chromabits.com/legit/logo.png)
+
 # Legit.js
 
 A simple input validation JavaScript library
