@@ -166,11 +166,11 @@ var root = this,
             errorCount = 0,
             property;
 
-        for (property in input) {
-            if (input.hasOwnProperty(property) && this.rules[property] !== undefined) {
+        for (property in this.rules) {
+            if (this.rules.hasOwnProperty(property)) {
                 this.rules[property].forEach(function (ruleInstance) {
                     // Check if rule passes
-                    if (!ruleInstance.rule.execute(input[property], input)) {
+                    if (!ruleInstance.rule.execute(input[property], input, property)) {
                         // If it fails, add it to the exception
                         validationError.addFailedRule(property, input[property], ruleInstance.rule, ruleInstance.customMessage);
                         errorCount += 1;
@@ -187,12 +187,12 @@ var root = this,
     };
 
     /**
-     * Execute the rule againts a value
+     * Execute the rule against a value
      *
      * @param value
      * @returns {boolean}
      */
-    ValidationRule.prototype.execute = function (value, inputArray) {
+    ValidationRule.prototype.execute = function (value, inputArray, property) {
         return true;
     };
 
@@ -313,8 +313,8 @@ var root = this,
         return field + ' is required';
     };
 
-    RequiredRule.prototype.execute = function (value) {
-        return value !== undefined;
+    RequiredRule.prototype.execute = function (value, input, property) {
+        return input.hasOwnProperty(property);
     };
 
     EqualsFieldRule.prototype = new ValidationRule();
