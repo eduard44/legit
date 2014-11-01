@@ -21,8 +21,26 @@ var root = this,
      *
      * @constructor
      */
-    function Validator() {
+    function Validator(rules) {
+        var key;
+
         this.rules = [];
+
+        if (rules && ensure.isObject(rules)) {
+            // Add rules defined in instantiation
+            for (key in rules) {
+                if (rules.hasOwnProperty(key)) {
+                    // If we got an array, we have multiple rules for this field
+                    if (ensure.isArray(rules[key])) {
+                        rules[key].forEach(function (rule) {
+                            this.addRule(key, rule);
+                        }, this);
+                    } else {
+                        this.addRule(key, rules[key]);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -96,7 +114,9 @@ var root = this,
      *
      * @constructor
      */
-    function RequiredRule() {}
+    function RequiredRule() {
+        ValidationRule.call(this, arguments);
+    }
 
     /**
      * Rule for making sure that a field matches another field
@@ -105,13 +125,15 @@ var root = this,
      * @constructor
      */
     function EqualsFieldRule(fieldName) {
+        ValidationRule.call(this, arguments);
+
         this.fieldName = fieldName;
     }
 
     // Library core
 
     /**
-     * Add a vlaidation rule to this validator
+     * Add a validation rule to this validator
      *
      * @param field
      * @param rule
