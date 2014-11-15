@@ -50,14 +50,24 @@ var legit = require('legit.js');
 
 3.- Use it!
 
-## Usage example (on the browser):
+## Usage example:
+
+Legit works by definining a rule set using a Validator class and then executing the validator on some input object:
 
 ```js
-var userValidator = new legit.Validator();
+// Aliases for convenience
+var Validator = legit.Validator,
+	MinMaxLengthRule = legit.MinMaxLengthRule,
+	InArrayRule = legit.InArrayRule,
+	RequiredRule = legit.RequiredRule,
+	ValidationError = legit.ValidationError;
 
-userValidator.addRule('first_name', new legit.MinMaxLengthRule(1, 20));
-userValidator.addRule('last_name', new legit.MinMaxLengthRule(1, 20));
-userValidator.addRule('type', new legit.InArrayRule(['admin', 'customer']), 'User must have a valid type');
+// Create a new validator instance
+var userValidator = new Validator();
+
+userValidator.addRule('first_name', new MinMaxLengthRule(1, 20));
+userValidator.addRule('last_name', new MinMaxLengthRule(1, 20));
+userValidator.addRule('type', new InArrayRule(['admin', 'customer']), 'User must have a valid type');
 
 // This should not fail:
 try {
@@ -67,7 +77,7 @@ try {
         'type': 'admin'
     });
 } catch (error) {
-    if (error instanceof legit.ValidationError) {
+    if (error instanceof ValidationError) {
         console.log(error.getMessages());
     } else {
         console.log('We got some other kind of error :(');
@@ -82,7 +92,7 @@ try {
         'type': 'lulz'
     });
 } catch (error) {
-    if (error instanceof legit.ValidationError) {
+    if (error instanceof ValidationError) {
         console.log(error.getMessages());
     } else {
         console.log('We got some other kind of error :(');
@@ -90,20 +100,33 @@ try {
 }
 ```
 
+It is also possible to define rules in the constructor of the validator for a shorter definition block. A field can contain one rule or an array of rules:
+
+```js
+var userValidator = new Validator({
+	first_name: [new MinMaxLengthRule(1, 20), new RequiredRule()],
+	last_name: new MinMaxLengthRule(1, 20),
+	type: new InArrayRule(['admin', 'customer'])
+});
+```
+
 ## Included rules:
 
 Legit.js comes with some built-in rules:
 
-- MinMaxLengthRule(min, max)
-- MinMaxRule(min, max)
-- InArrayRule(allowedElements)
-- RequiredRule()
-- EqualsFieldRule(fieldName)
-- TypeRule(ensureType)
+- **MinMaxLengthRule(min, max)**: Expects that the length of the field value is within a certain range
+- **MinMaxRule(min, max)**: Expects that the field value is within a certain range
+- **InArrayRule(allowedElements)**: Expects that the field value is contained in the allowedElements array
+- **RequiredRule()**: Requires a field to be defined in the input object
+- **EqualsFieldRule(fieldName)**: Expects that one field equals another field
+- **TypeRule(ensureType)**: Expects that the field is of a certain [ensure.js](https://github.com/eduard44/ensure) type
+- **RegexMatchRule(regex)**: Expects that the field matches a certain JS regular expression
 
 ## Extending:
 
-You can extend the default rule set by creating objects that have `ValidationRule` as their prototype:
+It is possible to extend the default rule set by creating rule objects that have `ValidationRule` as their prototype. The main function to implement is **execute(value, fields, property)**, which returns true if the input is valid or false if its not. 
+
+The example below is a rule that checks if the input is equal to `hello` or `hello world` (if `true` is provided in the constructor):
 
 ```js
 var HelloRule = function (checkWorld) {
@@ -118,7 +141,7 @@ HelloRule.prototype = new legit.ValidationRule();
 
 // The execute method performs the validation check.
 // It is expected that it returns true if the field is valid. False, otherwise.
-HelloRule.prototype.execute = function (inputValue, fields) {
+HelloRule.prototype.execute = function (inputValue, fields, property) {
     if (this.checkWorld) {
         return inputValue === 'hello world';
     }
